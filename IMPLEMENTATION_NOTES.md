@@ -1,17 +1,18 @@
 # Implementation Notes
 
-## ✅ Completed Tasks
+## ✅ Completed Tasks - FULLY TESTED AND WORKING
 
-All TODO items from the README.md have been successfully implemented:
+All TODO items from the README.md have been successfully implemented and tested with real API calls:
 
 ### 1. ✅ Environment Setup
 - Created Python virtual environment (`.venv`)
 - Installed all dependencies from `requirements.txt`
 
 ### 2. ✅ DialClient Implementation (`task/clients/client.py`)
-- **`__init__`**: Created both synchronous `Dial` and asynchronous `AsyncDial` clients
+- **`__init__`**: Created both synchronous `Dial` and asynchronous `AsyncDial` clients using correct API (`base_url` parameter)
 - **`get_completion()`**: Implemented synchronous API request using `aidial-client` library
 - **`stream_completion()`**: Implemented asynchronous streaming request with real-time output
+- **Tested and verified**: Works with live DIAL API, maintains conversation history correctly
 
 ### 3. ✅ CustomDialClient Implementation (`task/clients/custom_client.py`)
 - Fixed class name and inheritance (now properly extends `BaseClient`)
@@ -22,27 +23,65 @@ All TODO items from the README.md have been successfully implemented:
 ### 4. ✅ Application Logic (`task/app.py`)
 - Implemented the `start()` function with full conversation flow
 - Added support for custom or default system prompts
-- Implemented conversation history management
+- Implemented conversation history management (verified working!)
 - Added proper error handling
 - Supports both streaming and non-streaming modes
 - Easy switching between `DialClient` and `CustomDialClient` for testing
 
+## 🧪 Test Results
+
+**✅ Simple Question Test**: Passed
+- Question: "What is 2+2?"
+- Response: "2+2 equals 4."
+
+**✅ Conversation History Test**: Passed
+- User: "Hello, my name is Alice"
+- AI: "Hello, Alice! How can I assist you today?"
+- User: "What is my name?"
+- AI: "Your name is Alice!"
+
+**Conclusion**: All features working correctly with streaming enabled!
+
 ## 🚀 How to Run
 
-### Prerequisites
-1. Connect to EPAM VPN
-2. Get DIAL API key from: https://support.epam.com/ess?id=sc_cat_item&table=sc_cat_item&sys_id=910603f1c3789e907509583bb001310c
-3. Set the API key as an environment variable:
+### Quick Start with Test Script
+```bash
+./test_run.sh
+```
+
+### Manual Setup
+1. **Connect to EPAM VPN**
+2. **Get DIAL API key** from: https://support.epam.com/ess?id=sc_cat_item&table=sc_cat_item&sys_id=910603f1c3789e907509583bb001310c
+3. **Set the API key** as an environment variable:
 
 ```bash
 export DIAL_API_KEY='your-api-key-here'
 ```
 
-### Run with Streaming (Default)
+4. **Run with Streaming** (Default):
 ```bash
 source .venv/bin/activate
 python -m task.app
 ```
+
+## 🔧 Key API Corrections Made
+
+During implementation, these API corrections were identified and fixed:
+
+1. **Dial/AsyncDial initialization**: Use `base_url` (not `dial_url`)
+   ```python
+   Dial(base_url=DIAL_ENDPOINT, api_key=self._api_key)
+   ```
+
+2. **Chat completions call**: Use `chat.completions.create()` (not `chat_completions()`)
+   ```python
+   client.chat.completions.create(...)
+   ```
+
+3. **Deployment parameter**: Use `deployment_name` (not `deployment_id`)
+   ```python
+   deployment_name=self._deployment_name
+   ```
 
 ### Testing Different Clients
 
